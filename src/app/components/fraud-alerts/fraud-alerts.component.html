@@ -1,0 +1,44 @@
+<div *ngIf="error" class="alert alert-error">
+  {{ error }}
+  <button class="btn btn-small" (click)="loadAlerts()" style="margin-left: 10px;">Retry</button>
+</div>
+
+<div *ngIf="loading" class="loading">
+  <div class="spinner"></div>
+  <p>Loading fraud alerts...</p>
+</div>
+
+<div *ngIf="!loading && alerts.length === 0" class="alert alert-info">
+  No fraud alerts found.
+</div>
+
+<div *ngIf="!loading && alerts.length > 0" class="table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>Alert ID</th>
+        <th>Triggered Date</th>
+        <th>Transaction ID</th>
+        <th>Account Number</th>
+        <th>Account Name</th>
+        <th>Amount</th>
+        <th>Transaction Type</th>
+        <th>Rule Broken</th>
+        <th>Rule Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let alert of alerts">
+        <td>{{ alert.alertId }}</td>
+        <td>{{ formatDate(alert.triggeredAt) }}</td>
+        <td>{{ alert.transactionId }}</td>
+        <td>{{ alert.accountNumber }}</td>
+        <td>{{ alert.accountName }}</td>
+        <td>{{ formatAmount(alert.amount) }}</td>
+        <td>{{ alert.transactionType }}</td>
+        <td><strong>{{ alert.ruleBroken }}</strong></td>
+        <td style="font-family: monospace; font-size: 12px;">{{ alert.ruleCondition }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

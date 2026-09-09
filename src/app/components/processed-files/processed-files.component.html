@@ -1,0 +1,36 @@
+<div *ngIf="error" class="alert alert-error">
+  {{ error }}
+  <button class="btn btn-small" (click)="loadFiles()" style="margin-left: 10px;">Retry</button>
+</div>
+
+<div *ngIf="loading" class="loading">
+  <div class="spinner"></div>
+  <p>Loading processed files...</p>
+</div>
+
+<div *ngIf="!loading && files.length === 0" class="alert alert-info">
+  No processed files found.
+</div>
+
+<div *ngIf="!loading && files.length > 0" class="table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>File ID</th>
+        <th>File Name</th>
+        <th>File Hash</th>
+        <th>Ingested Date</th>
+        <th>Record Count</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let file of files">
+        <td>{{ file.fileId }}</td>
+        <td>{{ file.fileName }}</td>
+        <td style="font-family: monospace; font-size: 12px;">{{ file.fileHash }}</td>
+        <td>{{ formatDate(file.ingestedAt) }}</td>
+        <td>{{ file.recordCount }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

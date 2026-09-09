@@ -1,0 +1,164 @@
+<div *ngIf="error" class="alert alert-error">
+  {{ error }}
+</div>
+
+<div *ngIf="successMessage" class="alert alert-success">
+  {{ successMessage }}
+</div>
+
+<div style="margin-bottom: 20px;">
+  <button *ngIf="!showForm" class="btn btn-primary" (click)="openCreateForm()">
+    + Create New Fraud Rule
+  </button>
+</div>
+
+<!-- Create/Edit Form -->
+<div *ngIf="showForm" class="form-container">
+  <h3>{{ editingRuleId ? 'Edit Fraud Rule' : 'Create New Fraud Rule' }}</h3>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="ruleName">Rule Name:</label>
+      <input
+        type="text"
+        id="ruleName"
+        [(ngModel)]="formData.ruleName"
+        placeholder="e.g., High Transaction Amount"
+        [disabled]="loading"
+      />
+    </div>
+    <div class="form-group">
+      <label for="fieldName">Field Name:</label>
+      <select id="fieldName" [(ngModel)]="formData.fieldName" [disabled]="loading">
+        <option value="">-- Select Field --</option>
+        <option *ngFor="let field of fieldOptions" [value]="field">{{ field }}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="operator">Operator:</label>
+      <select id="operator" [(ngModel)]="formData.operator" [disabled]="loading">
+        <option value="">-- Select Operator --</option>
+        <option *ngFor="let op of operatorOptions" [value]="op">{{ op }}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="thresholdValue">Threshold Value:</label>
+      <input
+        type="text"
+        id="thresholdValue"
+        [(ngModel)]="formData.thresholdValue"
+        placeholder="e.g., 50000"
+        [disabled]="loading"
+      />
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="isActive">
+        <input
+          type="checkbox"
+          id="isActive"
+          [(ngModel)]="formData.isActive"
+          [disabled]="loading"
+        />
+        Active
+      </label>
+    </div>
+  </div>
+
+  <div class="btn-group">
+    <button class="btn btn-primary" (click)="submitForm()" [disabled]="loading">
+      {{ loading ? 'Saving...' : 'Save Rule' }}
+    </button>
+    <button class="btn btn-secondary" (click)="cancelForm()" [disabled]="loading">
+      Cancel
+    </button>
+  </div>
+</div>
+
+<!-- Rules List -->
+<div *ngIf="loading && !showForm" class="loading">
+  <div class="spinner"></div>
+  <p>Loading fraud rules...</p>
+</div>
+
+<div *ngIf="!loading && rules.length === 0" class="alert alert-info">
+  No fraud rules found. Create one to get started.
+</div>
+
+<div *ngIf="!loading && rules.length > 0" class="table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>Rule ID</th>
+        <th>Rule Name</th>
+        <th>Field Name</th>
+        <th>Operator</th>
+        <th>Threshold Value</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let rule of rules">
+        <td>{{ rule.ruleId }}</td>
+        <td>{{ rule.ruleName }}</td>
+        <td>{{ rule.fieldName }}</td>
+        <td style="font-family: monospace; font-weight: bold;">{{ rule.operator }}</td>
+        <td style="font-family: monospace;">{{ rule.thresholdValue }}</td>
+        <td>
+          <button
+            class="btn btn-small"
+            [ngClass]="rule.isActive ? 'btn-primary' : 'btn-secondary'"
+            (click)="toggleRuleStatus(rule)"
+            [disabled]="loading"
+          >
+            {{ rule.isActive ? '✓ Active' : '✗ Inactive' }}
+          </button>
+        </td>
+        <td>
+          <button class="btn btn-small" (click)="openEditForm(rule)" [disabled]="loading">
+            Edit
+          </button>
+          <button class="btn btn-small btn-danger" (click)="deleteRule(rule.ruleId)" [disabled]="loading">
+            Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+  }
+
+  .form-group select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+
+  .form-group input[type="checkbox"] {
+    margin-right: 8px;
+  }
+
+  .form-group label {
+    display: flex;
+    align-items: center;
+  }
+
+  .form-group label input[type="checkbox"] + text {
+    margin-left: 8px;
+  }
+</style>
