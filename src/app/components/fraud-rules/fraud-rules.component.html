@@ -104,7 +104,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let rule of rules">
+      <tr *ngFor="let rule of paginatedRules">
         <td>{{ rule.ruleId }}</td>
         <td>{{ rule.ruleName }}</td>
         <td>{{ rule.fieldName }}</td>
@@ -131,6 +131,33 @@
       </tr>
     </tbody>
   </table>
+
+  <!-- Pagination Controls -->
+  <div class="pagination">
+    <button class="btn btn-small" (click)="previousPage()" [disabled]="currentPage === 1">
+      Previous
+    </button>
+    
+    <div class="page-info">
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+    </div>
+
+    <div class="page-numbers">
+      <ng-container *ngFor="let page of [].constructor(totalPages); let i = index">
+        <button
+          class="btn btn-small"
+          [ngClass]="{ 'active': currentPage === i + 1 }"
+          (click)="goToPage(i + 1)"
+        >
+          {{ i + 1 }}
+        </button>
+      </ng-container>
+    </div>
+
+    <button class="btn btn-small" (click)="nextPage()" [disabled]="currentPage === totalPages">
+      Next
+    </button>
+  </div>
 </div>
 
 <style>
@@ -160,5 +187,37 @@
 
   .form-group label input[type="checkbox"] + text {
     margin-left: 8px;
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .page-info {
+    font-weight: bold;
+    color: #333;
+    min-width: 120px;
+    text-align: center;
+  }
+
+  .page-numbers {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .pagination .btn {
+    min-width: 40px;
+  }
+
+  .pagination .btn.active {
+    background-color: #667eea;
+    color: white;
   }
 </style>

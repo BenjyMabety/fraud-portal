@@ -12,11 +12,17 @@ import { ApiService, FraudRule } from '../../services/api.service';
 })
 export class FraudRulesComponent implements OnInit {
   rules: FraudRule[] = [];
+  paginatedRules: FraudRule[] = [];
   loading = false;
   error = '';
   successMessage = '';
   showForm = false;
   editingRuleId: number | null = null;
+
+  // Pagination
+  currentPage = 1;
+  pageSize = 10;
+  totalPages = 0;
 
   formData = {
     ruleName: '',
@@ -60,6 +66,7 @@ export class FraudRulesComponent implements OnInit {
     this.apiService.getFraudRules().subscribe({
       next: (data) => {
         this.rules = data;
+        this.updatePagination();
         this.loading = false;
       },
       error: (err) => {
@@ -67,6 +74,36 @@ export class FraudRulesComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  updatePagination(): void {
+    this.totalPages = Math.ceil(this.rules.length / this.pageSize);
+    if (this.totalPages === 0) this.totalPages = 1;
+
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.paginatedRules = this.rules.slice(startIndex, endIndex);
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePagination();
+    }
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePagination();
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePagination();
+    }
   }
 
   openCreateForm(): void {
