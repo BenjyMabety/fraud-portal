@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { UserDto } from '../../services/api.service';
+import { ApiService, UserDto } from '../../services/api.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ProcessedFilesComponent } from '../processed-files/processed-files.component';
@@ -28,6 +28,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
+    private apiService: ApiService,
     private router: Router
   ) {}
 
@@ -47,6 +48,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   switchTab(tab: 'files' | 'alerts' | 'rules'): void {
     this.activeTab = tab;
+  }
+
+  generateSample(): void {
+    this.apiService.generateSampleFile().subscribe({
+      next: (response) => {
+        alert('Sample file generated successfully!');
+      },
+      error: (error) => {
+        console.error('Error generating sample file:', error);
+        alert('Failed to generate sample file. Please try again.');
+      }
+    });
   }
 
   logout(): void {

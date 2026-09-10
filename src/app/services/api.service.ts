@@ -130,6 +130,12 @@ export class ApiService {
     );
   }
 
+  generateSampleFile(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/generator/sample-file`, {}, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: any): Observable<never> {
     console.error('API Error:', error);
     return throwError(() => new Error(error?.error?.error || 'An error occurred'));

@@ -33,12 +33,7 @@ export class FraudRulesComponent implements OnInit {
   };
 
   fieldOptions = [
-    'Amount',
-    'TransactionCount',
-    'AccountAge',
-    'MerchantCategory',
-    'AccountBalance',
-    'LocationChange'
+    'Amount'
   ];
 
   operatorOptions = [
@@ -47,9 +42,7 @@ export class FraudRulesComponent implements OnInit {
     '>=',
     '<=',
     '==',
-    '!=',
-    'CONTAINS',
-    'NOT_CONTAINS'
+    '!='
   ];
 
   constructor(private apiService: ApiService) {}
@@ -149,6 +142,13 @@ export class FraudRulesComponent implements OnInit {
       this.error = 'All fields are required';
       return;
     }
+
+    // Check if thresholdValue is a valid number
+  const numericThreshold = Number(this.formData.thresholdValue);
+  if (isNaN(numericThreshold)) {
+    this.error = 'Threshold value must be numeric.';
+    return;
+  }
 
     this.loading = true;
     this.error = '';

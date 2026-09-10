@@ -115,6 +115,10 @@ export class FraudAlertsComponent implements OnInit {
     this.applyFiltersAndSort();
   }
 
+  refreshAlerts(): void {
+    this.loadAlerts();
+  }
+
   formatDate(date: string): string {
     return new Date(date).toLocaleString();
   }
