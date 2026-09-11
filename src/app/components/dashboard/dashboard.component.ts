@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy,ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -25,6 +25,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   currentUser: UserDto | null = null;
   activeTab: 'files' | 'alerts' | 'rules' = 'files';
   private destroy$ = new Subject<void>();
+
+  // Use ViewChild to get a reference to the child component
+  @ViewChild(ProcessedFilesComponent) processedFilesComponent?: ProcessedFilesComponent;
 
   constructor(
     private authService: AuthService,
@@ -62,8 +65,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
   }
 
+    refreshFiles(): void {
+    this.loadFiles();
+  }
+
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+   loadFiles(): void {
+    // Check if the component is currently rendered before calling its method
+    if (this.processedFilesComponent) {
+      this.processedFilesComponent.loadFiles();
+    } else {
+      console.warn('ProcessedFilesComponent is not currently in the view.');
+    }
   }
 }

@@ -115,9 +115,6 @@ export class ProcessedFilesComponent implements OnInit {
     this.applyFiltersAndSort();
   }
 
-  refreshFiles(): void {
-    this.loadFiles();
-  }
 
   formatDate(date: string): string {
     return new Date(date).toLocaleString();

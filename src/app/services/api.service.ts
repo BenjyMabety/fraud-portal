@@ -53,7 +53,9 @@ export interface FraudRule {
   providedIn: 'root'
 })
 export class ApiService {
-  private apiUrl = 'http://localhost:5214/api/v1'; // Adjust port as needed
+  //local:"http://localhost:5214/api/v1",
+  //docker:'/api/v1'
+  private apiUrl = 'http://localhost:5214/api/v1';// Adjust port as needed
   private token: string | null = null;
 
   constructor(private http: HttpClient) {
